@@ -26,7 +26,9 @@ soup = BeautifulSoup(camelcamelcamel_webpage, "html.parser")
 title = soup.find(id="productTitle").get_text().strip()
 product_price = float(soup.find(name="span", class_="green").getText().split("£")[1])
 
-if product_price < 30:
+BUY_PRICE = 30
+
+if product_price < BUY_PRICE:
     connection = smtplib.SMTP("smtp.gmail.com", port=587)
     connection.starttls()
     connection.login(user=MY_EMAIL, password=MY_PASSWORD)
