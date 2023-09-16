@@ -23,7 +23,15 @@ response = requests.get(url, headers=headers)
 camelcamelcamel_webpage = response.text
 
 soup = BeautifulSoup(camelcamelcamel_webpage, "html.parser")
-title = soup.find(id="productTitle").get_text().strip()
+title_element = soup.select_one("h2 a")
+
+if title_element:
+    title = title_element.get_text().strip()
+    title_words = title.split(" ")[:-1]
+    title = " ".join(title_words)
+else:
+    title = "Your tracked item"
+
 product_price = float(soup.find(name="span", class_="green").getText().split("£")[1])
 
 BUY_PRICE = 30
@@ -34,3 +42,4 @@ if product_price < BUY_PRICE:
     connection.login(user=MY_EMAIL, password=MY_PASSWORD)
     connection.sendmail(from_addr=MY_EMAIL, to_addrs=RECIPIENT_EMAIL, msg=f"Subject:Amazon Price Alert!\n\n{title} is now £{product_price}!\n{url}".encode("utf-8"))
     connection.close()
+
